@@ -27,36 +27,72 @@
             <input type="text" id="userName" class="input-group" placeholder="Your Name...">
             <button id="submitName" class="btn btn-success">Submit Name</button>
         </form>
-        <h3 id="you-are-message"></h3>
+        <h3 id="you-are-message-player"></h3>
+        <h3 id="you-are-message-opponent"></h3>
     </div>
     <div class="col-lg-4"></div>
 </div>
 <div class="row row-rps-arena">
     <div class="col-lg-2"></div>
-    <div class="col-lg-3">
+    <div class="col-lg-3 col-player-area">
         <h1 class="waiting-player">
             Waiting for player 1...
         </h1>
         <h1 class="info-player">
         </h1>
         <ul class="list-group player-choices-list">
-            <li class="list-group-item hvr-shutter-out-horizontal player-choice">Rock</li>
-            <li class="list-group-item hvr-shutter-out-horizontal player-choice">Paper</li>
-            <li class="list-group-item hvr-shutter-out-horizontal player-choice">Scissors</li>
+            <li class="list-group-item hvr-shutter-out-horizontal player-choice">rock</li>
+            <li class="list-group-item hvr-shutter-out-horizontal player-choice">paper</li>
+            <li class="list-group-item hvr-shutter-out-horizontal player-choice">scissors</li>
         </ul>
+        <p class="player-scores"></p>
     </div>
-    <div class="col-lg-2"></div>
-    <div class="col-lg-3">
+    <div class="col-lg-2">
+        <h1 class="win-lose-message"></h1>
+    </div>
+    <div class="col-lg-3  col-opponent-area">
         <h1 class="waiting-opponent">
             Waiting for player 2...
         </h1>
         <h1 class="info-opponent">
         </h1>
+        <h1 class="rps-opponent">
+        </h1>
         <ul class="list-group opponent-choices-list">
-            <li class="list-group-item hvr-shutter-out-horizontal">Rock</li>
-            <li class="list-group-item hvr-shutter-out-horizontal">Paper</li>
-            <li class="list-group-item hvr-shutter-out-horizontal">Scissors</li>
+            <li class="list-group-item hvr-shutter-out-horizontal opponent-choice">rock</li>
+            <li class="list-group-item hvr-shutter-out-horizontal opponent-choice">paper</li>
+            <li class="list-group-item hvr-shutter-out-horizontal opponent-choice">scissors</li>
         </ul>
+        <p class="opponent-scores"></p>
+    </div>
+    <div class="col-lg-2"></div>
+</div>
+<br/><br/>
+<div class="row">
+    <div class="col-lg-12">
+        <h5 class="chat-header">Chat Room</h5>
+    </div>
+</div>
+<div class="row row-chat-area">
+    <div class="col-lg-2"></div>
+    <div class="col-lg-8 col-chat">
+
+        <div class="row row-chat-container">
+            <div class="col-lg-1"></div>
+            <div class="col-lg-8 chat-text-container">
+                <!--<p class="chat-text"><span class="chat-player">Hansel:</span> Bacot!</p>-->
+                <!--<p class="chat-text"><span class="chat-opponent">Kelly:</span> Apa lo?</p>-->
+            </div>
+            <div class="col-lg-1"></div>
+        </div>
+    </div>
+    <div class="col-lg-2"></div>
+</div>
+<div class="row">
+    <div class="col-lg-2"></div>
+    <div class="col-lg-8">
+        <input type="text" placeholder="Send a message..." class="chat-input-text" value="">
+        <button class="btn btn-secondary btnSubmit">Send Chat</button>
     </div>
     <div class="col-lg-2"></div>
 </div>

@@ -23,20 +23,29 @@
     margin-top: 10px;
 }
 
-#you-are-message
+#you-are-message-player
 {
     text-align: center;
     text-transform: uppercase;
 }
 
+#you-are-message-opponent
+{
+    text-align: center;
+    text-transform: uppercase;
+}
+
+
 .waiting-player
 {
     text-align: center;
+    font-size: 25pt;
 }
 
 .waiting-opponent
 {
     text-align: center;
+    font-size: 25pt;
 }
 
 .row-rps-arena
@@ -47,9 +56,116 @@
 .info-player
 {
     text-align: center;
+    text-transform: capitalize;
 }
 
 .info-opponent
 {
     text-align: center;
+    text-transform: capitalize;
+}
+
+.rps-opponent
+{
+    text-align: center;
+    text-transform: capitalize;
+}
+
+.player-scores
+{
+    font-size: 15pt;
+    text-align: center;
+}
+
+.opponent-scores
+{
+    font-size: 15pt;
+    text-align: center;
+}
+
+.win-lose-message
+{
+    text-align: center;
+}
+
+.player-choice
+{
+    text-transform: capitalize;
+}
+
+.opponent-choice
+{
+    text-transform: capitalize;
+}
+
+/* COL PLAYER AREA */
+.col-player-area
+{
+    border:1px solid black;
+    height: 300px;
+}
+
+.col-opponent-area
+{
+    border:1px solid black;
+    height: 300px;
+}
+
+/* CHAT */
+.row-chat-area
+{
+    margin-top: 25px;
+    margin-bottom: 10px;
+}
+
+.col-chat
+{
+    border:1px solid black;
+    border-radius: 5px;
+    height: 300px;
+    padding-top: 5px;
+    overflow: scroll;
+}
+
+.chat-header
+{
+    text-align: center;
+    margin-bottom: -50px;
+}
+
+.row-chat-container
+{
+    margin-top: 15px;
+}
+
+.chat-text
+{
+    margin-top: -15px;
+}
+
+.chat-player
+{
+    font-weight: bold;
+    color: #5bd6ff;
+}
+
+.chat-opponent
+{
+    font-weight: bold;
+    color:indianred;
+}
+
+.chat-input-text
+{
+    width: 100%;
+    margin-bottom: 10px;
+    font-size: 15pt;
+    text-indent: 10px;
+    border-radius: 5px;
+}
+
+.btnSubmit
+{
+    width: 100%;
+    margin-bottom: 50px;
 }
