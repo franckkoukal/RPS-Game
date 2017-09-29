@@ -46,9 +46,12 @@ let RPS = {
             {
                 if(snapshot.child(1).exists() && RPS.user_id === snapshot.child(1).val().player_id)
                 {
-                    database.ref("chat").onDisconnect().update({
-                        message: snapshot.child(1).val().player_name + " HAS DISCONNECTED!"
-                    });
+                    if(RPS.user_id !== 0)
+                    {
+                        database.ref("chat").onDisconnect().update({
+                            message: snapshot.child(1).val().player_name + " HAS DISCONNECTED!"
+                        });
+                    }
                     database.ref("players/1").onDisconnect().remove();
                 }
                 else if(snapshot.child(2).exists() && RPS.user_id === snapshot.child(2).val().opponent_id)
