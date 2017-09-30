@@ -49,7 +49,7 @@ let RPS = {
                     if(RPS.user_id !== 0)
                     {
                         database.ref("chat").onDisconnect().update({
-                            message: snapshot.child(1).val().player_name + " HAS DISCONNECTED!"
+                            message: "<span style='text-transform: capitalize'>" + snapshot.child(1).val().player_name + "</span> has disconnected!"
                         });
                     }
                     database.ref("players/1").onDisconnect().remove();
@@ -57,18 +57,22 @@ let RPS = {
                 else if(snapshot.child(2).exists() && RPS.user_id === snapshot.child(2).val().opponent_id)
                 {
                     database.ref("chat").onDisconnect().update({
-                        message: snapshot.child(2).val().opponent_name + " HAS DISCONNECTED!"
+                        message: "<span style='text-transform: capitalize'>" + snapshot.child(2).val().opponent_name + "</span> has disconnected!"
                     });
                     database.ref("players/2").onDisconnect().remove();
                     database.ref("players/turn").onDisconnect().remove();
                 }
+                else if(!snapshot.child(1).exists() && !snapshot.child(2).exists())
+                {
+                    database.ref("chat").onDisconnect().update({
+                        message: ""
+                    });
+                }
             }
-            else
-            {
-                database.ref("chat").onDisconnect().update({
-                    message: ""
-                });
-            }
+            // else
+            // {
+            //
+            // }
         });
     },
     resetTurn:function () {
@@ -110,6 +114,8 @@ let RPS = {
                             $(".player-scores").hide();
                             $(".opponent-scores").hide();
                             $(".chat-text-container").empty();
+                            $(".loading-img-player").show();
+                            $(".loading-img-opponent").show();
                         }
                     }
                     else if(snapshot.hasChild("1") && !snapshot.hasChild("2"))
@@ -126,6 +132,8 @@ let RPS = {
                             }
                             $(".waiting-player").html(snapshot.val().player_name);
                             $(".player-scores").show();
+                            $(".loading-img-player").show();
+                            $(".loading-img-opponent").show();
                             $(".player-scores").html("Wins: <span id='player-wins'>" + snapshot.val().player_wins + "</span> - Loses: <span id='player-loses'>" + snapshot.val().player_losses + "</span>");
                         }, function(errorObject) {
                             console.log("The read failed: " + errorObject.code);
@@ -160,6 +168,8 @@ let RPS = {
                                 $(".player-scores").hide();
                                 $(".opponent-choices-list").hide();
                             }
+                            $(".loading-img-player").show();
+                            $(".loading-img-opponent").show();
                             $(".waiting-opponent").html(snapshot.val().opponent_name);
                             $(".opponent-scores").html("Wins: <span id='player-wins'>" + snapshot.val().opponent_wins + "</span> - Loses: <span id='player-loses'>" + snapshot.val().opponent_losses + "</span>");
                         }, function(errorObject) {
@@ -191,6 +201,8 @@ let RPS = {
                         });
                         $(".opponent-scores").show();
                         $(".player-scores").show();
+                        $(".loading-img-player").hide();
+                        $(".loading-img-opponent").hide();
                         RPS.databaseTurn = snapshot.val().turn;
                         $(".rps-form").hide();
                         RPS.playerDisconnect();
@@ -239,6 +251,7 @@ let RPS = {
                                 $(".info-player").html("<span style='text-transform: capitalize'>" + snapshot.val().player_name + "</span> is choosing...");
                                 $(".player-scores").html("Wins: <span id='player-wins'>" + snapshot.val().player_wins + "</span> - Loses: <span id='player-loses'>" + snapshot.val().player_losses + "</span>");
                                 $(".opponent-choices-list").hide();
+                                $(".loading-img-opponent").show();
                             });
                             newRefOpponent = ref.child(2);
                             newRefOpponent.on("value", function (snapshot) {
@@ -249,8 +262,9 @@ let RPS = {
                         {
                             $(".player-choices-list").hide();
                             $(".info-player").show();
-                            $(".info-player").html("Done choosing.");
+                            $(".info-player").html("Done choosing");
                             $(".opponent-choices-list").show();
+                            $(".loading-img").hide();
                             newRefPlayer = ref.child(1);
                             newRefPlayer.on("value", function (snapshot) {
                                 $(".player-scores").html("Wins: <span id='player-wins'>" + snapshot.val().player_wins + "</span> - Loses: <span id='player-loses'>" + snapshot.val().player_losses + "</span>");
@@ -302,6 +316,7 @@ let RPS = {
                                     $(".info-opponent").html(RPS.opponent_rps_choice);
                                     $(".info-player").show();
                                     $(".info-player").html(RPS.player_rps_choice);
+                                    $(".loading-img").hide();
                                 }
                             });
 
@@ -585,6 +600,9 @@ $(document).ready(function() {
     $(".opponent-choices-list").hide();
     $(".info-player").hide();
     $(".info-opponent").hide();
+    $(".rps-opponent").hide();
+    $(".loading-img-player").hide();
+    $(".loading-img-opponent").hide();
 
     $("#submitName").on("click", function (event) {
         let name = $("#userName").val();
