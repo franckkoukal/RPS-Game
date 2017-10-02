@@ -69,10 +69,6 @@ let RPS = {
                     });
                 }
             }
-            // else
-            // {
-            //
-            // }
         });
     },
     resetTurn:function () {
@@ -88,266 +84,248 @@ let RPS = {
         let database = firebase.database();
         let ref = database.ref('players');
         ref.on('value', function (snapshot) {
-            // if(snapshot.val() !== null)
-            // {
-            //     ref.on("value", function (snapshot) {
-            //         if(snapshot.numChildren() < 2)
-            //         {
-            //             $(".rps-form").show();
-            //         }
-            //         else
-            //         {
-            //             $(".rps-form").hide();
-            //         }
-            //     });
-            // }
-            // else
-            // {
-                let newRefPlayer, newRefOpponent;
-                ref.on('value', function (snapshot) {
-                    if(!snapshot.hasChild("1") && !snapshot.hasChild("2"))
+            let newRefPlayer, newRefOpponent;
+            ref.on('value', function (snapshot) {
+                if(!snapshot.hasChild("1") && !snapshot.hasChild("2"))
+                {
+                    if(RPS.user_id === 0)
                     {
-                        if(RPS.user_id === 0)
+                        $(".waiting-player").html("Waiting for player 1...");
+                        $(".waiting-opponent").html("Waiting for player 2...");
+                        $(".player-scores").hide();
+                        $(".opponent-scores").hide();
+                        $(".chat-text-container").empty();
+                        $(".loading-img-player").show();
+                        $(".loading-img-opponent").show();
+                    }
+                }
+                else if(snapshot.hasChild("1") && !snapshot.hasChild("2"))
+                {
+                    newRefPlayer = ref.child(1);
+                    newRefPlayer.on("value", function(snapshot) {
+                        if(RPS.user_id === snapshot.val().player_id)
                         {
-                            $(".waiting-player").html("Waiting for player 1...");
+                            $("#you-are-message-player").html("welcome, " + snapshot.val().player_name + "!");
+                            $(".info-opponent").hide();
                             $(".waiting-opponent").html("Waiting for player 2...");
-                            $(".player-scores").hide();
                             $(".opponent-scores").hide();
-                            $(".chat-text-container").empty();
-                            $(".loading-img-player").show();
-                            $(".loading-img-opponent").show();
+                            $(".player-choices-list").hide();
                         }
-                    }
-                    else if(snapshot.hasChild("1") && !snapshot.hasChild("2"))
-                    {
-                        newRefPlayer = ref.child(1);
-                        newRefPlayer.on("value", function(snapshot) {
-                            if(RPS.user_id === snapshot.val().player_id)
-                            {
-                                $("#you-are-message-player").html("welcome, " + snapshot.val().player_name + "!");
-                                $(".info-opponent").hide();
-                                $(".waiting-opponent").html("Waiting for player 2...");
-                                $(".opponent-scores").hide();
-                                $(".player-choices-list").hide();
-                            }
-                            $(".waiting-player").html(snapshot.val().player_name);
-                            $(".player-scores").show();
-                            $(".loading-img-player").show();
-                            $(".loading-img-opponent").show();
-                            $(".player-scores").html("Wins: <span id='player-wins'>" + snapshot.val().player_wins + "</span> - Loses: <span id='player-loses'>" + snapshot.val().player_losses + "</span>");
-                        }, function(errorObject) {
-                            console.log("The read failed: " + errorObject.code);
-                        });
-                        if(RPS.user_id === snapshot.child(1).val().player_id)
-                        {
-                            $(".rps-form").hide();
-                            $("#you-are-message").show();
-                        }
-                        else
-                        {
-                            $(".rps-form").show();
-                            $("#you-are-message").hide();
-                            $(".chat-text").empty();
-                        }
-                        RPS.playerDisconnect();
-                    }
-                    else if(!snapshot.hasChild("1") && snapshot.hasChild("2"))
-                    {
-                        newRefOpponent = ref.child(2);
-                        newRefOpponent.on("value", function(snapshot) {
-                            if(RPS.user_id === snapshot.val().opponent_id)
-                            {
-                                $("#you-are-message-opponent").html("welcome, " + snapshot.val().opponent_name + "!");
-                                $(".info-player").hide();
-                                ref.on("value", function (snap) {
-                                    if(snap.numChildren() < 3)
-                                    {
-                                        $(".waiting-player").html("Waiting for player 1...");
-                                    }
-                                });
-                                $(".player-scores").hide();
-                                $(".opponent-choices-list").hide();
-                            }
-                            $(".loading-img-player").show();
-                            $(".loading-img-opponent").show();
-                            $(".waiting-opponent").html(snapshot.val().opponent_name);
-                            $(".opponent-scores").html("Wins: <span id='player-wins'>" + snapshot.val().opponent_wins + "</span> - Loses: <span id='player-loses'>" + snapshot.val().opponent_losses + "</span>");
-                        }, function(errorObject) {
-                            console.log("The read failed: " + errorObject.code);
-                        });
-                        RPS.playerDisconnect();
-                    }
-                    else if(snapshot.hasChild("1") && snapshot.hasChild("2"))
-                    {
-                        newRefPlayer = ref.child(1);
-                        newRefOpponent = ref.child(2);
-                        newRefPlayer.on("value", function(snapshot) {
-                            if(RPS.user_id === snapshot.val().player_id)
-                            {
-                                $("#you-are-message-player").html("welcome, " + snapshot.val().player_name + "!");
-                                $(".waiting-player").html(snapshot.val().player_name);
-                            }
-                        }, function(errorObject) {
-                            console.log("The read failed: " + errorObject.code);
-                        });
-                        newRefOpponent.on("value", function(snapshot) {
-                            if(RPS.user_id === snapshot.val().opponent_id)
-                            {
-                                $("#you-are-message-opponent").html("welcome, " + snapshot.val().opponent_name + "!");
-                                $(".waiting-opponent").html(snapshot.val().opponent_name);
-                            }
-                        }, function(errorObject) {
-                            console.log("The read failed: " + errorObject.code);
-                        });
-                        $(".opponent-scores").show();
+                        $(".waiting-player").html(snapshot.val().player_name);
                         $(".player-scores").show();
-                        $(".loading-img-player").hide();
-                        $(".loading-img-opponent").hide();
-                        RPS.databaseTurn = snapshot.val().turn;
+                        $(".loading-img-player").show();
+                        $(".loading-img-opponent").show();
+                        $(".player-scores").html("Wins: <span id='player-wins'>" + snapshot.val().player_wins + "</span> - Loses: <span id='player-loses'>" + snapshot.val().player_losses + "</span>");
+                    }, function(errorObject) {
+                        console.log("The read failed: " + errorObject.code);
+                    });
+                    if(RPS.user_id === snapshot.child(1).val().player_id)
+                    {
                         $(".rps-form").hide();
-                        RPS.playerDisconnect();
-
-                        //Browser = Player 1, Turn = Player 1
-                        if(RPS.user_id === snapshot.child(1).val().player_id && RPS.databaseTurn === 1)
+                        $("#you-are-message").show();
+                    }
+                    else
+                    {
+                        $(".rps-form").show();
+                        $("#you-are-message").hide();
+                        $(".chat-text").empty();
+                    }
+                    RPS.playerDisconnect();
+                }
+                else if(!snapshot.hasChild("1") && snapshot.hasChild("2"))
+                {
+                    newRefOpponent = ref.child(2);
+                    newRefOpponent.on("value", function(snapshot) {
+                        if(RPS.user_id === snapshot.val().opponent_id)
                         {
-                            newRefPlayer = ref.child(1);
-                            $(".player-choices-list").show();
+                            $("#you-are-message-opponent").html("welcome, " + snapshot.val().opponent_name + "!");
                             $(".info-player").hide();
-                            $(".rps-opponent").hide();
-                            $(".info-opponent").show();
-                            newRefPlayer.on("value", function (snapshot) {
-                                $(".info-player").html(snapshot.val().player_choice);
-                                $(".player-scores").html("Wins: <span id='player-wins'>" + snapshot.val().player_wins + "</span> - Loses: <span id='player-loses'>" + snapshot.val().player_losses + "</span>");
+                            ref.on("value", function (snap) {
+                                if(snap.numChildren() < 3)
+                                {
+                                    $(".waiting-player").html("Waiting for player 1...");
+                                }
                             });
-                            newRefPlayer = ref.child(2);
-                            newRefPlayer.on("value", function (snapshot) {
-                                $(".waiting-opponent").html(snapshot.val().opponent_name);
-                                $(".info-opponent").html("<span style='text-transform: capitalize'>" + snapshot.val().opponent_name + "</span> is waiting for your turn...");
-                                $(".opponent-scores").html("Wins: <span id='opponent-wins'>" + snapshot.val().opponent_wins + "</span> - Loses: <span id='opponent-loses'>" + snapshot.val().opponent_losses + "</span>");
-                            });
-                        }
-                        else if(RPS.user_id === snapshot.child(1).val().player_id && RPS.databaseTurn === 2)//Browser = Player 1, Turn = Player 2
-                        {
-                            newRefPlayer = ref.child(1);
-                            $(".player-choices-list").hide();
-                            $(".info-player").show();
-                            $(".info-opponent").show();
-                            newRefPlayer.on("value", function (snapshot) {
-                                $(".info-player").html(snapshot.val().player_choice);
-                                $(".player-scores").html("Wins: <span id='player-wins'>" + snapshot.val().player_wins + "</span> - Loses: <span id='player-loses'>" + snapshot.val().player_losses + "</span>");
-                            });
-                            newRefOpponent = ref.child(2);
-                            newRefOpponent.on("value", function (snapshot) {
-                                console.log(snapshot.val().opponent_name);
-                                $(".info-opponent").html("<span style='text-transform: capitalize'>" + snapshot.val().opponent_name + "</span> is choosing...");
-                                $(".opponent-scores").html("Wins: <span id='opponent-wins'>" + snapshot.val().opponent_wins + "</span> - Loses: <span id='opponent-loses'>" + snapshot.val().opponent_losses + "</span>");
-                            });
-                        }
-                        else if(RPS.user_id === snapshot.child(2).val().opponent_id && RPS.databaseTurn === 1)//Browser = Player 2, Turn = Player 1
-                        {
-                            newRefPlayer = ref.child(1);
-                            newRefPlayer.on("value", function (snapshot) {
-                                $(".info-player").show();
-                                $(".info-player").html("<span style='text-transform: capitalize'>" + snapshot.val().player_name + "</span> is choosing...");
-                                $(".player-scores").html("Wins: <span id='player-wins'>" + snapshot.val().player_wins + "</span> - Loses: <span id='player-loses'>" + snapshot.val().player_losses + "</span>");
-                                $(".opponent-choices-list").hide();
-                                $(".loading-img-opponent").show();
-                            });
-                            newRefOpponent = ref.child(2);
-                            newRefOpponent.on("value", function (snapshot) {
-                                $(".opponent-scores").html("Wins: <span id='opponent-wins'>" + snapshot.val().opponent_wins + "</span> - Loses: <span id='opponent-loses'>" + snapshot.val().opponent_losses + "</span>");
-                            });
-                        }
-                        else if(RPS.user_id === snapshot.child(2).val().opponent_id && RPS.databaseTurn === 2)//Browser = Player 2, Turn = Player 2
-                        {
-                            $(".player-choices-list").hide();
-                            $(".info-player").show();
-                            $(".info-player").html("Done choosing");
-                            $(".opponent-choices-list").show();
-                            $(".loading-img").hide();
-                            newRefPlayer = ref.child(1);
-                            newRefPlayer.on("value", function (snapshot) {
-                                $(".player-scores").html("Wins: <span id='player-wins'>" + snapshot.val().player_wins + "</span> - Loses: <span id='player-loses'>" + snapshot.val().player_losses + "</span>");
-                            });
-                            newRefOpponent = ref.child(2);
-                            newRefOpponent.on("value", function (snapshot) {
-                                console.log(snapshot.val().opponent_name);
-                                //$(".waiting-opponent").html(snapshot.val().opponent_name);
-                                $(".opponent-scores").html("Wins: <span id='opponent-wins'>" + snapshot.val().opponent_wins + "</span> - Loses: <span id='opponent-loses'>" + snapshot.val().opponent_losses + "</span>");
-                            });
-                        }
-                        else if(RPS.databaseTurn === 3 && RPS.isGameEnds === false)
-                        {
-                            RPS.isGameEnds = true;
-                            $(".player-choices-list").hide();
+                            $(".player-scores").hide();
                             $(".opponent-choices-list").hide();
-                            $(".win-lose-message").show();
+                        }
+                        $(".loading-img-player").show();
+                        $(".loading-img-opponent").show();
+                        $(".waiting-opponent").html(snapshot.val().opponent_name);
+                        $(".opponent-scores").html("Wins: <span id='player-wins'>" + snapshot.val().opponent_wins + "</span> - Loses: <span id='player-loses'>" + snapshot.val().opponent_losses + "</span>");
+                    }, function(errorObject) {
+                        console.log("The read failed: " + errorObject.code);
+                    });
+                    RPS.playerDisconnect();
+                }
+                else if(snapshot.hasChild("1") && snapshot.hasChild("2"))
+                {
+                    newRefPlayer = ref.child(1);
+                    newRefOpponent = ref.child(2);
+                    newRefPlayer.on("value", function(snapshot) {
+                        if(RPS.user_id === snapshot.val().player_id)
+                        {
+                            $("#you-are-message-player").html("welcome, " + snapshot.val().player_name + "!");
+                            $(".waiting-player").html(snapshot.val().player_name);
+                        }
+                    }, function(errorObject) {
+                        console.log("The read failed: " + errorObject.code);
+                    });
+                    newRefOpponent.on("value", function(snapshot) {
+                        if(RPS.user_id === snapshot.val().opponent_id)
+                        {
+                            $("#you-are-message-opponent").html("welcome, " + snapshot.val().opponent_name + "!");
+                            $(".waiting-opponent").html(snapshot.val().opponent_name);
+                        }
+                    }, function(errorObject) {
+                        console.log("The read failed: " + errorObject.code);
+                    });
+                    $(".opponent-scores").show();
+                    $(".player-scores").show();
+                    $(".loading-img-player").hide();
+                    $(".loading-img-opponent").hide();
+                    RPS.databaseTurn = snapshot.val().turn;
+                    $(".rps-form").hide();
+                    RPS.playerDisconnect();
 
-                            newRefPlayer = ref.child(1);
-                            newRefPlayer.on("value", function (snapshot) {
-                                RPS.player_rps_choice = snapshot.val().player_choice;
-                                RPS.player_win = snapshot.val().player_wins;
-                                RPS.player_lose = snapshot.val().player_losses;
-                            });
+                    //Browser = Player 1, Turn = Player 1
+                    if(RPS.user_id === snapshot.child(1).val().player_id && RPS.databaseTurn === 1)
+                    {
+                        newRefPlayer = ref.child(1);
+                        $(".player-choices-list").show();
+                        $(".info-player").hide();
+                        $(".rps-opponent").hide();
+                        $(".info-opponent").show();
+                        newRefPlayer.on("value", function (snapshot) {
+                            $(".info-player").html(snapshot.val().player_choice);
+                            $(".player-scores").html("Wins: <span id='player-wins'>" + snapshot.val().player_wins + "</span> - Loses: <span id='player-loses'>" + snapshot.val().player_losses + "</span>");
+                        });
+                        newRefPlayer = ref.child(2);
+                        newRefPlayer.on("value", function (snapshot) {
+                            $(".waiting-opponent").html(snapshot.val().opponent_name);
+                            $(".info-opponent").html("<span style='text-transform: capitalize'>" + snapshot.val().opponent_name + "</span> is waiting for your turn...");
+                            $(".opponent-scores").html("Wins: <span id='opponent-wins'>" + snapshot.val().opponent_wins + "</span> - Loses: <span id='opponent-loses'>" + snapshot.val().opponent_losses + "</span>");
+                        });
+                    }
+                    else if(RPS.user_id === snapshot.child(1).val().player_id && RPS.databaseTurn === 2)//Browser = Player 1, Turn = Player 2
+                    {
+                        newRefPlayer = ref.child(1);
+                        $(".player-choices-list").hide();
+                        $(".info-player").show();
+                        $(".info-opponent").show();
+                        newRefPlayer.on("value", function (snapshot) {
+                            $(".info-player").html(snapshot.val().player_choice);
+                            $(".player-scores").html("Wins: <span id='player-wins'>" + snapshot.val().player_wins + "</span> - Loses: <span id='player-loses'>" + snapshot.val().player_losses + "</span>");
+                        });
+                        newRefOpponent = ref.child(2);
+                        newRefOpponent.on("value", function (snapshot) {
+                            console.log(snapshot.val().opponent_name);
+                            $(".info-opponent").html("<span style='text-transform: capitalize'>" + snapshot.val().opponent_name + "</span> is choosing...");
+                            $(".opponent-scores").html("Wins: <span id='opponent-wins'>" + snapshot.val().opponent_wins + "</span> - Loses: <span id='opponent-loses'>" + snapshot.val().opponent_losses + "</span>");
+                        });
+                    }
+                    else if(RPS.user_id === snapshot.child(2).val().opponent_id && RPS.databaseTurn === 1)//Browser = Player 2, Turn = Player 1
+                    {
+                        newRefPlayer = ref.child(1);
+                        newRefPlayer.on("value", function (snapshot) {
+                            $(".info-player").show();
+                            $(".info-player").html("<span style='text-transform: capitalize'>" + snapshot.val().player_name + "</span> is choosing...");
+                            $(".player-scores").html("Wins: <span id='player-wins'>" + snapshot.val().player_wins + "</span> - Loses: <span id='player-loses'>" + snapshot.val().player_losses + "</span>");
+                            $(".opponent-choices-list").hide();
+                            $(".loading-img-opponent").show();
+                        });
+                        newRefOpponent = ref.child(2);
+                        newRefOpponent.on("value", function (snapshot) {
+                            $(".opponent-scores").html("Wins: <span id='opponent-wins'>" + snapshot.val().opponent_wins + "</span> - Loses: <span id='opponent-loses'>" + snapshot.val().opponent_losses + "</span>");
+                        });
+                    }
+                    else if(RPS.user_id === snapshot.child(2).val().opponent_id && RPS.databaseTurn === 2)//Browser = Player 2, Turn = Player 2
+                    {
+                        $(".player-choices-list").hide();
+                        $(".info-player").show();
+                        $(".info-player").html("Done choosing");
+                        $(".opponent-choices-list").show();
+                        $(".loading-img").hide();
+                        newRefPlayer = ref.child(1);
+                        newRefPlayer.on("value", function (snapshot) {
+                            $(".player-scores").html("Wins: <span id='player-wins'>" + snapshot.val().player_wins + "</span> - Loses: <span id='player-loses'>" + snapshot.val().player_losses + "</span>");
+                        });
+                        newRefOpponent = ref.child(2);
+                        newRefOpponent.on("value", function (snapshot) {
+                            console.log(snapshot.val().opponent_name);
+                            //$(".waiting-opponent").html(snapshot.val().opponent_name);
+                            $(".opponent-scores").html("Wins: <span id='opponent-wins'>" + snapshot.val().opponent_wins + "</span> - Loses: <span id='opponent-loses'>" + snapshot.val().opponent_losses + "</span>");
+                        });
+                    }
+                    else if(RPS.databaseTurn === 3 && RPS.isGameEnds === false)
+                    {
+                        RPS.isGameEnds = true;
+                        $(".player-choices-list").hide();
+                        $(".opponent-choices-list").hide();
+                        $(".win-lose-message").show();
 
-                            newRefOpponent = ref.child(2);
-                            newRefOpponent.on("value", function (snapshot) {
-                                RPS.opponent_rps_choice = snapshot.val().opponent_choice;
-                                RPS.opponent_win = snapshot.val().opponent_wins;
-                                RPS.opponent_lose = snapshot.val().opponent_losses;
-                            });
+                        newRefPlayer = ref.child(1);
+                        newRefPlayer.on("value", function (snapshot) {
+                            RPS.player_rps_choice = snapshot.val().player_choice;
+                            RPS.player_win = snapshot.val().player_wins;
+                            RPS.player_lose = snapshot.val().player_losses;
+                        });
 
+                        newRefOpponent = ref.child(2);
+                        newRefOpponent.on("value", function (snapshot) {
+                            RPS.opponent_rps_choice = snapshot.val().opponent_choice;
+                            RPS.opponent_win = snapshot.val().opponent_wins;
+                            RPS.opponent_lose = snapshot.val().opponent_losses;
+                        });
+
+                        newRefPlayer.on("value", function (snapshot) {
+                            if(RPS.user_id === snapshot.val().player_id)
+                            {
+                                $(".waiting-player").html(snapshot.val().player_name);
+                                $(".info-opponent").hide();
+                                $(".rps-opponent").show();
+                                $(".rps-opponent").html(RPS.opponent_rps_choice);
+                                $(".info-player").show();
+                                $(".info-player").html(RPS.player_rps_choice);
+                            }
+                        });
+
+                        newRefOpponent.on("value", function (snapshot) {
+                            if(RPS.user_id === snapshot.val().opponent_id)
+                            {
+                                $(".info-opponent").show();
+                                $(".info-opponent").html(RPS.opponent_rps_choice);
+                                $(".info-player").show();
+                                $(".info-player").html(RPS.player_rps_choice);
+                                $(".loading-img").hide();
+                            }
+                        });
+
+                        RPS.checkWinner();
+
+                        RPS.showScoreTimeout = setTimeout(function () {
+                            clearTimeout(RPS.showScoreTimeout);
                             newRefPlayer.on("value", function (snapshot) {
                                 if(RPS.user_id === snapshot.val().player_id)
                                 {
-                                    $(".waiting-player").html(snapshot.val().player_name);
-                                    $(".info-opponent").hide();
-                                    $(".rps-opponent").show();
-                                    $(".rps-opponent").html(RPS.opponent_rps_choice);
-                                    $(".info-player").show();
-                                    $(".info-player").html(RPS.player_rps_choice);
+                                    $(".info-player").hide();
+                                    $(".player-choices-list").show();
                                 }
                             });
-
                             newRefOpponent.on("value", function (snapshot) {
                                 if(RPS.user_id === snapshot.val().opponent_id)
                                 {
-                                    $(".info-opponent").show();
-                                    $(".info-opponent").html(RPS.opponent_rps_choice);
+                                    $(".rps-opponent").hide();
                                     $(".info-player").show();
-                                    $(".info-player").html(RPS.player_rps_choice);
-                                    $(".loading-img").hide();
+                                    $(".info-opponent").hide();
                                 }
                             });
-
-                            RPS.checkWinner();
-
-                            RPS.showScoreTimeout = setTimeout(function () {
-                                clearTimeout(RPS.showScoreTimeout);
-                                newRefPlayer.on("value", function (snapshot) {
-                                    if(RPS.user_id === snapshot.val().player_id)
-                                    {
-                                        $(".info-player").hide();
-                                        $(".player-choices-list").show();
-                                    }
-                                });
-                                newRefOpponent.on("value", function (snapshot) {
-                                    if(RPS.user_id === snapshot.val().opponent_id)
-                                    {
-                                        $(".rps-opponent").hide();
-                                        $(".info-player").show();
-                                        $(".info-opponent").hide();
-                                    }
-                                });
-                                $(".win-lose-message").hide();
-                                RPS.resetTurn();
-                            },3000);
-                            // $(".player-scores").html("Wins: <span id='player-wins'>" + RPS.player_win + "</span> - Loses: <span id='player-loses'>" + RPS.player_lose + "</span>");
-                            // $(".opponent-scores").html("Wins: <span id='opponent-wins'>" + RPS.opponent_win + "</span> - Loses: <span id='opponent-loses'>" + RPS.opponent_lose + "</span>");
-                        }
+                            $(".win-lose-message").hide();
+                            RPS.resetTurn();
+                        },3000);
                     }
-                });
-            //}
+                }
+            });
         });
     },
     checkWinner:function () {
@@ -417,16 +395,6 @@ let RPS = {
                 newRef.on("value", function (snapshot) {
                    RPS.player_name = snapshot.val().player_name
                 });
-
-                // newRef.on("value", function(snapshot) {
-                //     console.log(snapshot.val());
-                //     $(".rps-form").hide();
-                //     $("#you-are-message").html("welcome, " + snapshot.val().player_name + "!");
-                //     $(".waiting-player").html(snapshot.val().player_name);
-                //     $(".player-scores").html("Wins: <span id='player-wins'>" + snapshot.val().player_wins + "</span> - Loses: <span id='player-loses'>" + snapshot.val().player_losses + "</span>");
-                // }, function(errorObject) {
-                //     console.log("The read failed: " + errorObject.code);
-                // });
                 RPS.user_id = 1;
                 $(".rps-form").hide();
             }
@@ -445,27 +413,7 @@ let RPS = {
                 ref.update({
                     turn: 1
                 });
-
-                // newRef.on("value", function(snapshot) {
-                //     console.log(snapshot.val());
-                //     $(".rps-form").hide();
-                //     $("#you-are-message").html("welcome, " + snapshot.val().opponent_name + "!");
-                //     $(".waiting-opponent").html(snapshot.val().opponent_name);
-                //     $(".opponent-scores").html("Wins: <span id='opponent-wins'>" + snapshot.val().opponent_wins + "</span> - Loses: <span id='opponent-loses'>" + snapshot.val().opponent_losses + "</span>");
-                // }, function(errorObject) {
-                //     console.log("The read failed: " + errorObject.code);
-                // });
                 RPS.user_id = 2;
-                // newRef = ref.child(1);
-                // newRef.on("value", function(snapshot) {
-                //     $(".info-player").show();
-                //     $(".info-player").html("<span style='text-transform: capitalize'>" + snapshot.val().player_name + "</span> is choosing...");
-                //     $(".player-scores").html("Wins: <span id='player-wins'>" + snapshot.val().player_wins + "</span> - Loses: <span id='player-loses'>" + snapshot.val().player_losses + "</span>");
-                //     $(".opponent-choices-list").hide();
-                // }, function(errorObject) {
-                //     console.log("The read failed: " + errorObject.code);
-                // });
-
                 ref.on("value", function(snapshot) {
                     RPS.databaseTurn = snapshot.val().turn;
                 }, function(errorObject) {
@@ -481,16 +429,6 @@ let RPS = {
                 newRef.on("value", function (snapshot) {
                     RPS.player_name = snapshot.val().player_name
                 });
-
-                // newRef.on("value", function(snapshot) {
-                //     console.log(snapshot.val());
-                //     $(".rps-form").hide();
-                //     $("#you-are-message").html("welcome, " + snapshot.val().player_name + "!");
-                //     $(".waiting-player").html(snapshot.val().player_name);
-                //     $(".player-scores").html("Wins: <span id='player-wins'>" + snapshot.val().player_wins + "</span> - Loses: <span id='player-loses'>" + snapshot.val().player_losses + "</span>");
-                // }, function(errorObject) {
-                //     console.log("The read failed: " + errorObject.code);
-                // });
                 RPS.user_id = 1;
                 $(".rps-form").hide();
             }
@@ -640,7 +578,6 @@ $(document).ready(function() {
         console.log(user_message);
         refChat.update({
            message: user_message
-           //timeAdded: firebase.database.ServerValue.TIMESTAMP
         });
         $(".chat-input-text").val("");
     });
@@ -649,4 +586,3 @@ $(document).ready(function() {
         $(".chat-text-container").append("<p class='chat-text'>" + snapshot.val().message + "</p>");
     });
 });
-
