@@ -61,7 +61,6 @@ playerDisconnect:function () {
 ### Player 1 Pick a Choice (Player 2 Point-of-View)
 ### Player 2 Pick a Choice (Player 1 Point-of-View)
 ### Player 2 Pick a Choice (Player 2 Point-of-View)
-### Player 2 Pick a Choice (Player 2 Point-of-View)
 ### Player 1 Wins
 ### Player 2 Wins
 ### Draw
