@@ -83,3 +83,7 @@ playerDisconnect:function () {
 ## RPS Multiplayer Game Production Link
 
 [https://hanselgunawan.github.io/RPS-Game](https://hanselgunawan.github.io/RPS-Game/)
+
+## Contact Me
+E-mail: hanselgunawan94@gmail.com
+LinkedIn: https://www.linkedin.com/in/hanselbtritama/
