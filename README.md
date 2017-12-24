@@ -56,16 +56,27 @@ playerDisconnect:function () {
 
 ## User Interface (UI)
 ### Waiting for Player 1 and Player 2
+![](https://imgur.com/3BKQBNW.png)
 ### Waiting for Player 1 or Player 2
+![](https://imgur.com/C67HluV.png)
 ### Player 1 Pick a Choice (Player 1 Point-of-View)
+![](https://imgur.com/yXXpYqT.png)
 ### Player 1 Pick a Choice (Player 2 Point-of-View)
+![](https://imgur.com/xkLTepo.png)
 ### Player 2 Pick a Choice (Player 1 Point-of-View)
+![](https://imgur.com/XNq2dBU.png)
 ### Player 2 Pick a Choice (Player 2 Point-of-View)
+![](https://imgur.com/ganRTpA.png)
 ### Player 1 Wins
+![](https://imgur.com/JPtrqrt.png)
 ### Player 2 Wins
+![](https://imgur.com/fnYy9h2.png)
 ### Draw
+![](https://imgur.com/TjbKSWi.png)
 ### Chat with Each Other
+![](https://imgur.com/WH4RAt2.png)
 ### Disconnected Player
+![](https://imgur.com/ux9fKtD.png)
 
 ## Demo
 ### Player 1 Check-In
