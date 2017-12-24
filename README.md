@@ -80,7 +80,9 @@ playerDisconnect:function () {
 
 ## Demo
 ### Player 1 Check-In
+![](https://imgur.com/FlDp2zM.gif)
 ### Player 2 Check-In
+![](https://imgur.com/2pGJt8i.gif)
 ### Player 1 Pick a Choice
 ### Player 2 Pick a Choice
 ### Player 1 Wins
